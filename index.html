@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Twitter</title>
+<title>Twitter UI Assignment</title>
 
 <style>
 
@@ -22,7 +22,6 @@ body {
     background: #000;
     color: #e7e9ea;
     transition: background 0.4s ease, color 0.4s ease;
-    overflow-x: hidden;
 }
 
 /* ============================= */
@@ -33,7 +32,6 @@ body {
     display: flex;
     max-width: 1300px;
     margin: auto;
-    width: 100%;
 }
 
 .left-sidebar {
@@ -42,8 +40,6 @@ body {
     position: sticky;
     top: 0;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 .left-sidebar h1 {
@@ -59,7 +55,6 @@ body {
     margin-bottom: 10px;
     border-radius: 30px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .nav-btn:hover {
@@ -83,7 +78,6 @@ body {
     flex: 1;
     border-left: 1px solid #2f3336;
     border-right: 1px solid #2f3336;
-    min-width: 0; 
 }
 
 .feed-header {
@@ -91,11 +85,6 @@ body {
     font-size: 22px;
     font-weight: bold;
     border-bottom: 1px solid #2f3336;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(5px);
-    position: sticky;
-    top: 0;
-    z-index: 5;
 }
 
 .tweet {
@@ -109,8 +98,6 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
 }
 
 .tweet-content {
@@ -124,7 +111,6 @@ body {
 
 .tweet-text {
     margin-bottom: 10px;
-    word-break: break-word;
 }
 
 .actions {
@@ -153,57 +139,21 @@ body {
     font-size: 14px;
 }
 
-/* Responsive Adjustments for Original Layout */
-@media (max-width: 1200px) {
-    .left-sidebar { width: 88px; align-items: center; }
-    .left-sidebar h1, .nav-btn span:not(.icon), .tweet-btn span { display: none; }
-    .nav-btn { justify-content: center; width: 50px; height: 50px; padding: 0; border-radius: 50%; }
-    .tweet-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; }
-    .tweet-btn::before { content: "+"; font-size: 24px; }
-}
-
-@media (max-width: 1080px) {
-    .right-sidebar { display: none; }
-}
-
-@media (max-width: 500px) {
-    .left-sidebar {
-        position: fixed;
-        bottom: 0;
-        top: auto;
-        height: 60px;
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-around;
-        background: #000;
-        border-top: 1px solid #2f3336;
-        padding: 0;
-        z-index: 100;
-    }
-    .left-sidebar h1, .tweet-btn { display: none; }
-    .nav-btn { margin-bottom: 0; }
-    .feed { border: none; margin-bottom: 60px; }
-}
-
 /* ============================= */
 /* SUBTLE TOGGLE */
 /* ============================= */
 
 .hidden-toggle {
     position: fixed;
-    bottom: 80px; 
+    bottom: 15px;
     right: 15px;
     font-size: 10px;
     opacity: 0.2;
     cursor: pointer;
     background: rgba(255,255,255,0.1);
-    padding: 8px 12px;
-    border-radius: 15px;
+    padding: 5px 10px;
+    border-radius: 10px;
     z-index: 999;
-}
-
-@media (min-width: 501px) {
-    .hidden-toggle { bottom: 15px; }
 }
 
 .hidden-toggle:hover {
@@ -211,9 +161,10 @@ body {
 }
 
 /* ============================= */
-/* SIMPLE MODE (FIXED RESPONSIVE) */
+/* SIMPLE MODE (ONLY MODIFIES ON CLASS) */
 /* ============================= */
 
+/* CSS Variables for Simple Mode Themes Only */
 .simple-mode {
     --simple-bg: #0f172a;
     --simple-text: #f8fafc;
@@ -240,57 +191,44 @@ body {
 .simple-only { display: none; }
 .simple-mode .simple-only { display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
+/* In Simple Mode, we overhaul the container flow */
 .simple-mode .container {
     max-width: 1000px;
-    padding: 15px;
-    display: block; /* Switch from flex to block to allow absolute positioning of sidebar on mobile */
+    padding: 20px;
 }
 
-/* Simple Mode Sidebar (Drawer) */
+/* Simple Mode Left Sidebar (Drawer) */
 .simple-mode .left-sidebar {
-    position: fixed;
-    left: -320px; /* Hidden by default */
-    top: 0;
-    width: 300px;
-    height: 100vh;
-    background: var(--simple-card);
-    padding: 30px 20px;
-    opacity: 1;
+    width: 0;
+    padding: 0;
     margin: 0;
+    opacity: 0;
+    overflow: hidden;
+    height: calc(100vh - 40px);
+    background: var(--simple-card);
+    border-radius: 24px;
     box-shadow: var(--simple-shadow);
-    transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 1000;
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .simple-mode.sidebar-open .left-sidebar {
-    left: 0;
-}
-
-/* Adjust Simple Mode Sidebar for Desktop */
-@media (min-width: 1200px) {
-    .simple-mode .container { display: flex; }
-    .simple-mode .left-sidebar {
-        position: sticky;
-        left: 0;
-        top: 20px;
-        height: calc(100vh - 40px);
-        width: 300px;
-        margin-right: 20px;
-        opacity: 0;
-        visibility: hidden;
-        border-radius: 24px;
-    }
-    .simple-mode.sidebar-open .left-sidebar {
-        opacity: 1;
-        visibility: visible;
-    }
+    width: 320px;
+    padding: 30px 20px;
+    opacity: 1;
+    margin-right: 30px;
 }
 
 .simple-mode .nav-btn {
-    font-size: 22px;
-    padding: 14px;
-    border-radius: 18px;
+    font-size: 26px; /* Bigger for accessibility */
+    padding: 16px;
+    border-radius: 20px;
     color: var(--simple-text);
+}
+
+.simple-mode .display-settings {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid var(--simple-border);
 }
 
 .simple-mode .theme-toggle {
@@ -298,34 +236,38 @@ body {
     align-items: center;
     gap: 15px;
     background: var(--simple-hover);
-    padding: 15px;
-    border-radius: 18px;
+    padding: 18px;
+    border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
     margin-top: 15px;
+    font-size: 20px;
 }
 
-/* Simple Mode Feed Header */
+/* Simple Mode Feed */
+.simple-mode .feed {
+    border: none;
+    background: transparent;
+}
+
 .simple-mode .feed-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: var(--simple-card);
-    padding: 15px 20px;
-    border-radius: 20px;
-    margin-bottom: 20px;
-    font-size: 24px;
+    padding: 25px;
+    border-radius: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--simple-shadow);
     border: 1px solid var(--simple-border);
-    position: sticky;
-    top: 10px;
-    backdrop-filter: blur(10px);
+    font-size: 30px;
 }
 
 .simple-mode .icon-btn {
-    width: 48px;
-    height: 48px;
+    width: 55px;
+    height: 55px;
     background: var(--simple-hover);
-    border-radius: 15px;
+    border-radius: 18px;
     color: var(--simple-accent);
 }
 
@@ -333,61 +275,65 @@ body {
 .simple-mode .tweet {
     background: var(--simple-card);
     border: 1px solid var(--simple-border);
-    border-radius: 25px;
-    margin-bottom: 20px;
-    padding: 20px;
-    display: flex;
+    border-radius: 30px;
+    margin-bottom: 30px;
+    padding: 30px;
+    box-shadow: var(--simple-shadow);
     flex-direction: row;
-    gap: 20px;
-}
-
-@media (max-width: 550px) {
-    .simple-mode .tweet { flex-direction: column; }
-    .simple-mode .avatar { width: 60px; height: 60px; }
 }
 
 .simple-mode .avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
     border: 3px solid var(--simple-accent);
 }
 
-.simple-mode .username { font-size: 22px; color: var(--simple-text); }
-.simple-mode .tweet-text { font-size: 18px; line-height: 1.5; color: var(--simple-text); }
+.simple-mode .username {
+    font-size: 26px;
+}
 
+.simple-mode .tweet-text {
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+/* Actions in Simple Mode */
 .simple-mode .actions {
     max-width: 100%;
-    gap: 15px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    gap: 25px;
+    margin-top: 20px;
 }
 
 .simple-mode .actions span {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     background: var(--simple-hover);
-    border-radius: 18px;
-    font-size: 22px;
+    border-radius: 22px;
+    font-size: 28px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
 }
 
-/* Simple Mode Trending Popup */
+.simple-mode .actions span::after {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Simple Mode Trending Notification */
 .simple-mode .right-sidebar {
-    position: fixed;
-    top: 90px;
-    right: 15px;
-    width: 320px;
-    max-width: calc(100vw - 30px);
+    position: absolute;
+    top: 110px;
+    right: 20px;
+    width: 360px;
     padding: 0;
     opacity: 0;
     visibility: hidden;
-    transform: scale(0.9) translateY(-10px);
-    transition: 0.3s ease;
-    z-index: 1100;
+    transform: scale(0.9) translateY(-20px);
+    transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 200;
 }
 
 .simple-mode.trending-open .right-sidebar {
@@ -398,10 +344,19 @@ body {
 
 .simple-mode .trending-box {
     background: var(--simple-card);
-    border: 3px solid var(--simple-accent);
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: var(--simple-shadow);
+    border: 4px solid var(--simple-accent);
+    border-radius: 35px;
+    padding: 30px;
+}
+
+.simple-mode .trend {
+    font-size: 20px;
+    padding: 18px;
+    background: var(--simple-hover);
+    border-radius: 18px;
+    margin-bottom: 12px;
+    border: none;
+    color: var(--simple-accent);
 }
 
 </style>
@@ -414,44 +369,33 @@ body {
 
     <div class="left-sidebar">
         <h1 id="brand-logo">X</h1>
-        <div class="nav-btn">
-            <span class="icon">🏠</span>
-            <span> Home</span>
-        </div>
-        <div class="nav-btn">
-            <span class="icon">🔍</span>
-            <span> Explore</span>
-        </div>
-        <div class="nav-btn">
-            <span class="icon">🔔</span>
-            <span> Notifications</span>
-        </div>
-        <div class="nav-btn">
-            <span class="icon">👤</span>
-            <span> Profile</span>
-        </div>
+        <div class="nav-btn">🏠 Home</div>
+        <div class="nav-btn">🔍 Explore</div>
+        <div class="nav-btn">🔔 Notifications</div>
+        <div class="nav-btn">👤 Profile</div>
         
+        <!-- Theme Widget Exclusively for Simple Mode -->
         <div class="simple-only display-settings" style="width: 100%;">
-            <p style="font-weight: bold; opacity: 0.6; padding-left: 10px; font-size: 12px; margin-bottom: 5px;">DISPLAY SETTINGS</p>
+            <p style="font-weight: bold; opacity: 0.6; padding-left: 10px; font-size: 14px;">DISPLAY SETTINGS</p>
             <div class="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span>
                 <span id="theme-text">Dark Mode</span>
             </div>
         </div>
 
-        <div class="tweet-btn"><span>Post</span></div>
+        <div class="tweet-btn">Post</div>
     </div>
 
     <div class="feed">
         <div class="feed-header">
             <span class="simple-only icon-btn" onclick="toggleSidebar()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </span>
             
             <span class="header-title">Home</span>
             
             <span class="simple-only icon-btn" onclick="toggleTrending()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
             </span>
         </div>
         <div id="tweets"></div>
@@ -476,22 +420,22 @@ const tweetData = [
     {
         name: "CatDaily",
         avatar: "https://placekittens.com/200/300",
-        text: "This cat refuses to wake up before 10am 🐱 #CatLife"
+        text: "This cat refuses to wake up before 10am 🐱"
     },
     {
         name: "DogVibes",
         avatar: "https://placedog.net/100/100",
-        text: "Golden retriever discovers snow for the first time ❄️🐶 Best day ever!"
+        text: "Golden retriever discovers snow for the first time ❄️🐶"
     },
     {
         name: "WildShots",
         avatar: "https://placebear.com/100/100",
-        text: "A bear spotted peacefully walking through the forest 🌲 nature is healing."
+        text: "A bear spotted peacefully walking through the forest 🌲"
     },
     {
         name: "DevLife",
         avatar: "https://ui-avatars.com/api/?name=Dev+Life&background=0D8ABC&color=fff",
-        text: "Responsive design is just making things smaller until they fit. Change my mind. 💻📱"
+        text: "Just spent 3 hours debugging a missing semicolon. Standard Tuesday. 💻"
     }
 ];
 
@@ -551,26 +495,7 @@ function toggleTrending(){
     document.body.classList.remove("sidebar-open");
 }
 
-// Close sidebar on click outside
-document.addEventListener('click', (e) => {
-    if (document.body.classList.contains('sidebar-open')) {
-        const sidebar = document.querySelector('.left-sidebar');
-        const menuBtn = document.querySelector('.icon-btn');
-        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-            toggleSidebar();
-        }
-    }
-    if (document.body.classList.contains('trending-open')) {
-        const trending = document.querySelector('.right-sidebar');
-        const trendingBtn = document.querySelectorAll('.icon-btn')[1];
-        if (!trending.contains(e.target) && !trendingBtn.contains(e.target)) {
-            toggleTrending();
-        }
-    }
-});
-
 </script>
 
 </body>
 </html>
-
