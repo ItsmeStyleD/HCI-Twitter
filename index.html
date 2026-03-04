@@ -829,16 +829,39 @@ body {
     color: #0f172a;
 }
 
+.simple-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
 .simple-sheet-title {
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 18px;
+    margin-bottom: 0;
     color: #38bdf8;
     letter-spacing: 0.5px;
 }
 
 .light-theme .simple-sheet-title {
     color: #0284c7;
+}
+
+.simple-sheet-post-btn {
+    background: #1d9bf0;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 22px;
+    border-radius: 30px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.simple-sheet-post-btn:active {
+    background: #1a8cd8;
 }
 
 .simple-sheet-nav-btn {
@@ -1080,7 +1103,10 @@ body {
 <div class="simple-sheet-overlay" id="simpleMenuOverlay" onclick="closeSimpleSheet('simpleMenuOverlay', event)">
     <div class="simple-sheet">
         <div class="sheet-handle"></div>
-        <h3 class="simple-sheet-title">Menu</h3>
+        <div class="simple-sheet-header">
+            <h3 class="simple-sheet-title">Menu</h3>
+            <div class="simple-sheet-post-btn">Post</div>
+        </div>
         <div class="simple-sheet-nav-btn">🏠 <span>Home</span></div>
         <div class="simple-sheet-nav-btn">🔍 <span>Explore</span></div>
         <div class="simple-sheet-nav-btn">🔔 <span>Notifications</span></div>
