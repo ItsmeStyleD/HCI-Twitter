@@ -83,7 +83,7 @@ body {
     flex: 1;
     border-left: 1px solid #2f3336;
     border-right: 1px solid #2f3336;
-    min-width: 0; /* Prevents flex items from overflowing */
+    min-width: 0; 
 }
 
 .feed-header {
@@ -154,20 +154,16 @@ body {
 }
 
 /* Responsive Adjustments for Original Layout */
-@media (max-width: 1080px) {
-    .right-sidebar { display: none; }
+@media (max-width: 1200px) {
+    .left-sidebar { width: 88px; align-items: center; }
+    .left-sidebar h1, .nav-btn span:not(.icon), .tweet-btn span { display: none; }
+    .nav-btn { justify-content: center; width: 50px; height: 50px; padding: 0; border-radius: 50%; }
+    .tweet-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; }
+    .tweet-btn::before { content: "+"; font-size: 24px; }
 }
 
-@media (max-width: 700px) {
-    .left-sidebar {
-        width: 80px;
-        align-items: center;
-    }
-    .left-sidebar h1, .nav-btn span:not(.icon) { display: none; }
-    .nav-btn { justify-content: center; width: 50px; height: 50px; padding: 0; }
-    .tweet-btn { width: 50px; height: 50px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; }
-    .tweet-btn::before { content: "+"; font-size: 24px; }
-    .tweet-btn span { display: none; }
+@media (max-width: 1080px) {
+    .right-sidebar { display: none; }
 }
 
 @media (max-width: 500px) {
@@ -195,7 +191,7 @@ body {
 
 .hidden-toggle {
     position: fixed;
-    bottom: 80px; /* Adjusted for mobile nav */
+    bottom: 80px; 
     right: 15px;
     font-size: 10px;
     opacity: 0.2;
@@ -215,7 +211,7 @@ body {
 }
 
 /* ============================= */
-/* SIMPLE MODE (RESPONSIVE OVERHAUL) */
+/* SIMPLE MODE (FIXED RESPONSIVE) */
 /* ============================= */
 
 .simple-mode {
@@ -247,42 +243,46 @@ body {
 .simple-mode .container {
     max-width: 1000px;
     padding: 15px;
-    display: flex;
-    flex-direction: row; /* Default PC */
+    display: block; /* Switch from flex to block to allow absolute positioning of sidebar on mobile */
 }
 
-/* Simple Mode Left Sidebar (Drawer) */
+/* Simple Mode Sidebar (Drawer) */
 .simple-mode .left-sidebar {
-    width: 0;
-    padding: 0;
-    margin: 0;
-    opacity: 0;
-    position: sticky;
-    top: 20px;
-    height: calc(100vh - 40px);
+    position: fixed;
+    left: -320px; /* Hidden by default */
+    top: 0;
+    width: 300px;
+    height: 100vh;
     background: var(--simple-card);
-    border-radius: 24px;
+    padding: 30px 20px;
+    opacity: 1;
+    margin: 0;
     box-shadow: var(--simple-shadow);
-    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-    z-index: 200;
+    transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 1000;
 }
 
 .simple-mode.sidebar-open .left-sidebar {
-    width: 300px;
-    padding: 30px 20px;
-    opacity: 1;
-    margin-right: 20px;
+    left: 0;
 }
 
-/* Tablet/Mobile Overlay for Sidebar in Simple Mode */
-@media (max-width: 850px) {
+/* Adjust Simple Mode Sidebar for Desktop */
+@media (min-width: 1200px) {
+    .simple-mode .container { display: flex; }
+    .simple-mode .left-sidebar {
+        position: sticky;
+        left: 0;
+        top: 20px;
+        height: calc(100vh - 40px);
+        width: 300px;
+        margin-right: 20px;
+        opacity: 0;
+        visibility: hidden;
+        border-radius: 24px;
+    }
     .simple-mode.sidebar-open .left-sidebar {
-        position: fixed;
-        left: 15px;
-        width: calc(100% - 30px);
-        height: auto;
-        max-height: 80vh;
-        margin-right: 0;
+        opacity: 1;
+        visibility: visible;
     }
 }
 
@@ -290,6 +290,7 @@ body {
     font-size: 22px;
     padding: 14px;
     border-radius: 18px;
+    color: var(--simple-text);
 }
 
 .simple-mode .theme-toggle {
@@ -317,6 +318,7 @@ body {
     border: 1px solid var(--simple-border);
     position: sticky;
     top: 10px;
+    backdrop-filter: blur(10px);
 }
 
 .simple-mode .icon-btn {
@@ -324,20 +326,23 @@ body {
     height: 48px;
     background: var(--simple-hover);
     border-radius: 15px;
+    color: var(--simple-accent);
 }
 
-/* Simple Mode Tweets - Responsive Cards */
+/* Simple Mode Tweets */
 .simple-mode .tweet {
     background: var(--simple-card);
     border: 1px solid var(--simple-border);
     border-radius: 25px;
     margin-bottom: 20px;
     padding: 20px;
+    display: flex;
     flex-direction: row;
+    gap: 20px;
 }
 
 @media (max-width: 550px) {
-    .simple-mode .tweet { flex-direction: column; align-items: flex-start; }
+    .simple-mode .tweet { flex-direction: column; }
     .simple-mode .avatar { width: 60px; height: 60px; }
 }
 
@@ -348,14 +353,15 @@ body {
     border: 3px solid var(--simple-accent);
 }
 
-.simple-mode .username { font-size: 22px; }
-.simple-mode .tweet-text { font-size: 18px; line-height: 1.5; }
+.simple-mode .username { font-size: 22px; color: var(--simple-text); }
+.simple-mode .tweet-text { font-size: 18px; line-height: 1.5; color: var(--simple-text); }
 
 .simple-mode .actions {
     max-width: 100%;
     gap: 15px;
     margin-top: 15px;
     flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .simple-mode .actions span {
@@ -364,11 +370,14 @@ body {
     background: var(--simple-hover);
     border-radius: 18px;
     font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Simple Mode Trending Popup */
 .simple-mode .right-sidebar {
-    position: absolute;
+    position: fixed;
     top: 90px;
     right: 15px;
     width: 320px;
@@ -377,7 +386,8 @@ body {
     opacity: 0;
     visibility: hidden;
     transform: scale(0.9) translateY(-10px);
-    z-index: 250;
+    transition: 0.3s ease;
+    z-index: 1100;
 }
 
 .simple-mode.trending-open .right-sidebar {
@@ -391,6 +401,7 @@ body {
     border: 3px solid var(--simple-accent);
     border-radius: 25px;
     padding: 20px;
+    box-shadow: var(--simple-shadow);
 }
 
 </style>
@@ -420,7 +431,6 @@ body {
             <span> Profile</span>
         </div>
         
-        <!-- Theme Widget Exclusively for Simple Mode -->
         <div class="simple-only display-settings" style="width: 100%;">
             <p style="font-weight: bold; opacity: 0.6; padding-left: 10px; font-size: 12px; margin-bottom: 5px;">DISPLAY SETTINGS</p>
             <div class="theme-toggle" onclick="toggleTheme()">
@@ -541,13 +551,20 @@ function toggleTrending(){
     document.body.classList.remove("sidebar-open");
 }
 
-// Close sidebar on click outside (mobile)
+// Close sidebar on click outside
 document.addEventListener('click', (e) => {
-    if (window.innerWidth <= 850 && document.body.classList.contains('sidebar-open')) {
+    if (document.body.classList.contains('sidebar-open')) {
         const sidebar = document.querySelector('.left-sidebar');
         const menuBtn = document.querySelector('.icon-btn');
         if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
             toggleSidebar();
+        }
+    }
+    if (document.body.classList.contains('trending-open')) {
+        const trending = document.querySelector('.right-sidebar');
+        const trendingBtn = document.querySelectorAll('.icon-btn')[1];
+        if (!trending.contains(e.target) && !trendingBtn.contains(e.target)) {
+            toggleTrending();
         }
     }
 });
