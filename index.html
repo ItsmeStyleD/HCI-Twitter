@@ -302,6 +302,17 @@ body {
     overflow-y: auto;
 }
 
+.mobile-trending-sheet .trend {
+    padding: 14px 10px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #2f3336;
+    font-size: 15px;
+}
+
+.mobile-trending-sheet .trend:last-child {
+    border-bottom: none;
+}
+
 .mobile-trending-overlay.open .mobile-trending-sheet {
     transform: translateY(0);
 }
@@ -728,6 +739,11 @@ body {
     .simple-mode .mobile-nav-btn {
         color: var(--simple-text);
     }
+
+    /* In simple mode, hide the original Trends btn (handled by header star) */
+    .simple-mode .mobile-nav-btn.trends-btn {
+        display: none;
+    }
 }
 
 /* ============================= */
@@ -766,6 +782,132 @@ body {
 
     .mobile-fab {
         bottom: calc(env(safe-area-inset-bottom, 0px) + 70px);
+    }
+}
+
+
+/* ============================= */
+/* SIMPLE MODE MOBILE SHEETS     */
+/* ============================= */
+
+.simple-sheet-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 400;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.simple-sheet-overlay.open {
+    opacity: 1;
+}
+
+.simple-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1e293b;
+    border-radius: 28px 28px 0 0;
+    padding: 20px 20px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.simple-sheet-overlay.open .simple-sheet {
+    transform: translateY(0);
+}
+
+/* Light theme override for sheet */
+.light-theme .simple-sheet {
+    background: #ffffff;
+    color: #0f172a;
+}
+
+.simple-sheet-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+}
+
+.light-theme .simple-sheet-title {
+    color: #0284c7;
+}
+
+.simple-sheet-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 20px;
+    padding: 16px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    color: #f8fafc;
+    transition: background 0.2s;
+}
+
+.light-theme .simple-sheet-nav-btn {
+    color: #0f172a;
+}
+
+.simple-sheet-nav-btn:active {
+    background: rgba(56,189,248,0.12);
+}
+
+.simple-sheet-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 10px 0;
+}
+
+.light-theme .simple-sheet-divider {
+    background: rgba(0,0,0,0.08);
+}
+
+.simple-sheet-nav-btn.theme-row {
+    background: rgba(56,189,248,0.08);
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+.light-theme .simple-sheet-nav-btn.theme-row {
+    background: rgba(2,132,199,0.08);
+    color: #0284c7;
+}
+
+.simple-trend-item {
+    font-size: 18px;
+    padding: 16px 12px;
+    border-radius: 16px;
+    margin-bottom: 6px;
+    background: rgba(56,189,248,0.08);
+    color: #38bdf8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.light-theme .simple-trend-item {
+    background: rgba(2,132,199,0.07);
+    color: #0284c7;
+}
+
+.simple-trend-item:active {
+    background: rgba(56,189,248,0.18);
+}
+
+/* In simple mode on mobile: hide the original mobile trending overlay */
+@media (max-width: 1023px) {
+    .simple-mode #mobileTrendingOverlay {
+        display: none !important;
     }
 }
 
@@ -860,7 +1002,7 @@ body {
             <span>🔔</span>
             <span class="label">Alerts</span>
         </div>
-        <div class="mobile-nav-btn" aria-label="Trending" onclick="openMobileTrending()">
+        <div class="mobile-nav-btn trends-btn" aria-label="Trending" onclick="openMobileTrending()">
             <span>📊</span>
             <span class="label">Trends</span>
         </div>
@@ -883,10 +1025,39 @@ body {
     <div class="mobile-trending-sheet">
         <div class="sheet-handle"></div>
         <h3 style="margin-bottom: 16px; font-size: 20px; font-weight: bold;">Trending</h3>
-        <div class="trend" style="margin-bottom: 0">#CatsOfTheWorld</div>
+        <div class="trend">#CatsOfTheWorld</div>
         <div class="trend">#DogLovers</div>
         <div class="trend">#Wildlife</div>
         <div class="trend">#AnimalPhotography</div>
+    </div>
+</div>
+
+<!-- Simple Mode: Mobile Menu Bottom Sheet -->
+<div class="simple-sheet-overlay" id="simpleMenuOverlay" onclick="closeSimpleSheet('simpleMenuOverlay', event)">
+    <div class="simple-sheet">
+        <div class="sheet-handle"></div>
+        <h3 class="simple-sheet-title">Menu</h3>
+        <div class="simple-sheet-nav-btn">🏠 <span>Home</span></div>
+        <div class="simple-sheet-nav-btn">🔍 <span>Explore</span></div>
+        <div class="simple-sheet-nav-btn">🔔 <span>Notifications</span></div>
+        <div class="simple-sheet-nav-btn">👤 <span>Profile</span></div>
+        <div class="simple-sheet-divider"></div>
+        <div class="simple-sheet-nav-btn theme-row" onclick="toggleTheme(); event.stopPropagation();">
+            <span id="sheet-theme-icon">🌙</span>
+            <span id="sheet-theme-text">Dark Mode</span>
+        </div>
+    </div>
+</div>
+
+<!-- Simple Mode: Mobile Trending Bottom Sheet -->
+<div class="simple-sheet-overlay" id="simpleTrendingOverlay" onclick="closeSimpleSheet('simpleTrendingOverlay', event)">
+    <div class="simple-sheet">
+        <div class="sheet-handle"></div>
+        <h3 class="simple-sheet-title">Trending</h3>
+        <div class="simple-trend-item">#CatsOfTheWorld</div>
+        <div class="simple-trend-item">#DogLovers</div>
+        <div class="simple-trend-item">#Wildlife</div>
+        <div class="simple-trend-item">#AnimalPhotography</div>
     </div>
 </div>
 
@@ -964,16 +1135,28 @@ function toggleTheme() {
     const isLight = document.body.classList.toggle("light-theme");
     document.getElementById("theme-icon").innerText = isLight ? "☀️" : "🌙";
     document.getElementById("theme-text").innerText = isLight ? "Light Mode" : "Dark Mode";
+    const si = document.getElementById("sheet-theme-icon");
+    const st = document.getElementById("sheet-theme-text");
+    if (si) si.innerText = isLight ? "☀️" : "🌙";
+    if (st) st.innerText = isLight ? "Light Mode" : "Dark Mode";
 }
 
 function toggleSidebar() {
-    document.body.classList.toggle("sidebar-open");
-    document.body.classList.remove("trending-open");
+    if (window.innerWidth <= 1023 && document.body.classList.contains("simple-mode")) {
+        openSimpleSheet("simpleMenuOverlay");
+    } else {
+        document.body.classList.toggle("sidebar-open");
+        document.body.classList.remove("trending-open");
+    }
 }
 
 function toggleTrending() {
-    document.body.classList.toggle("trending-open");
-    document.body.classList.remove("sidebar-open");
+    if (window.innerWidth <= 1023 && document.body.classList.contains("simple-mode")) {
+        openSimpleSheet("simpleTrendingOverlay");
+    } else {
+        document.body.classList.toggle("trending-open");
+        document.body.classList.remove("sidebar-open");
+    }
 }
 
 /* ============================= */
@@ -1013,6 +1196,35 @@ sheet.addEventListener("touchend", e => {
     const delta = e.changedTouches[0].clientY - touchStartY;
     if (delta > 60) closeMobileTrending(null);
 }, { passive: true });
+
+/* ============================= */
+/* Simple Mode Mobile Sheets     */
+/* ============================= */
+
+function openSimpleSheet(id) {
+    const overlay = document.getElementById(id);
+    overlay.style.display = "block";
+    overlay.offsetHeight; // reflow
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+    // swipe-to-close
+    const s = overlay.querySelector(".simple-sheet");
+    let ty = 0;
+    s.addEventListener("touchstart", e => { ty = e.touches[0].clientY; }, { passive: true, once: false });
+    s._touchHandler = e => {
+        if (e.changedTouches[0].clientY - ty > 60) closeSimpleSheet(id, null);
+    };
+    s.addEventListener("touchend", s._touchHandler, { passive: true });
+}
+
+function closeSimpleSheet(id, e) {
+    const overlay = document.getElementById(id);
+    const s = overlay.querySelector(".simple-sheet");
+    if (e && s.contains(e.target)) return;
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+    setTimeout(() => { overlay.style.display = "none"; }, 400);
+}
 
 </script>
 </body>
