@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twitter UI Assignment</title>
+
+<style>
+
+/* ============================= */
+/* BASE RESET */
+/* ============================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #000;
+    color: #e7e9ea;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ============================= */
+/* ORIGINAL TWITTER-LIKE LAYOUT */
+/* ============================= */
+
+.container {
+    display: flex;
+    max-width: 1300px;
+    margin: auto;
+}
+
+.left-sidebar {
+    width: 275px;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.left-sidebar h1 {
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    background: #16181c;
+}
+
+.tweet-btn {
+    background: #1d9bf0;
+    color: white;
+    padding: 15px;
+    border-radius: 30px;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+/* FEED */
+
+.feed {
+    flex: 1;
+    border-left: 1px solid #2f3336;
+    border-right: 1px solid #2f3336;
+}
+
+.feed-header {
+    padding: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 1px solid #2f3336;
+}
+
+.tweet {
+    padding: 20px;
+    border-bottom: 1px solid #2f3336;
+    display: flex;
+    gap: 15px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.tweet-content {
+    flex: 1;
+}
+
+.username {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.tweet-text {
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    max-width: 300px;
+    color: #71767b;
+}
+
+/* RIGHT SIDEBAR */
+
+.right-sidebar {
+    width: 350px;
+    padding: 20px;
+}
+
+.trending-box {
+    background: #16181c;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.trend {
+    padding: 10px 0;
+    border-bottom: 1px solid #2f3336;
+    font-size: 14px;
+}
+
+/* ============================= */
+/* SUBTLE TOGGLE */
+/* ============================= */
+
+.hidden-toggle {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    font-size: 10px;
+    opacity: 0.2;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    padding: 5px 10px;
+    border-radius: 10px;
+    z-index: 999;
+}
+
+.hidden-toggle:hover {
+    opacity: 0.6;
+}
+
+/* ============================= */
+/* SIMPLE MODE (ONLY MODIFIES ON CLASS) */
+/* ============================= */
+
+/* CSS Variables for Simple Mode Themes Only */
+.simple-mode {
+    --simple-bg: #0f172a;
+    --simple-text: #f8fafc;
+    --simple-card: #1e293b;
+    --simple-hover: #334155;
+    --simple-accent: #38bdf8;
+    --simple-border: rgba(255, 255, 255, 0.1);
+    --simple-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    
+    background: var(--simple-bg);
+    color: var(--simple-text);
+}
+
+.simple-mode.light-theme {
+    --simple-bg: #f8fafc;
+    --simple-text: #0f172a;
+    --simple-card: #ffffff;
+    --simple-hover: #f1f5f9;
+    --simple-accent: #0284c7;
+    --simple-border: rgba(0, 0, 0, 0.05);
+    --simple-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.simple-only { display: none; }
+.simple-mode .simple-only { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+/* In Simple Mode, we overhaul the container flow */
+.simple-mode .container {
+    max-width: 1000px;
+    padding: 20px;
+}
+
+/* Simple Mode Left Sidebar (Drawer) */
+.simple-mode .left-sidebar {
+    width: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    overflow: hidden;
+    height: calc(100vh - 40px);
+    background: var(--simple-card);
+    border-radius: 24px;
+    box-shadow: var(--simple-shadow);
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.simple-mode.sidebar-open .left-sidebar {
+    width: 320px;
+    padding: 30px 20px;
+    opacity: 1;
+    margin-right: 30px;
+}
+
+.simple-mode .nav-btn {
+    font-size: 26px; /* Bigger for accessibility */
+    padding: 16px;
+    border-radius: 20px;
+    color: var(--simple-text);
+}
+
+.simple-mode .display-settings {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid var(--simple-border);
+}
+
+.simple-mode .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--simple-hover);
+    padding: 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+/* Simple Mode Feed */
+.simple-mode .feed {
+    border: none;
+    background: transparent;
+}
+
+.simple-mode .feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--simple-card);
+    padding: 25px;
+    border-radius: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--simple-shadow);
+    border: 1px solid var(--simple-border);
+    font-size: 30px;
+}
+
+.simple-mode .icon-btn {
+    width: 55px;
+    height: 55px;
+    background: var(--simple-hover);
+    border-radius: 18px;
+    color: var(--simple-accent);
+}
+
+/* Simple Mode Tweets */
+.simple-mode .tweet {
+    background: var(--simple-card);
+    border: 1px solid var(--simple-border);
+    border-radius: 30px;
+    margin-bottom: 30px;
+    padding: 30px;
+    box-shadow: var(--simple-shadow);
+    flex-direction: row;
+}
+
+.simple-mode .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+    border: 3px solid var(--simple-accent);
+}
+
+.simple-mode .username {
+    font-size: 26px;
+}
+
+.simple-mode .tweet-text {
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+/* Actions in Simple Mode */
+.simple-mode .actions {
+    max-width: 100%;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.simple-mode .actions span {
+    width: 70px;
+    height: 70px;
+    background: var(--simple-hover);
+    border-radius: 22px;
+    font-size: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+.simple-mode .actions span::after {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Simple Mode Trending Notification */
+.simple-mode .right-sidebar {
+    position: absolute;
+    top: 110px;
+    right: 20px;
+    width: 360px;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.9) translateY(-20px);
+    transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 200;
+}
+
+.simple-mode.trending-open .right-sidebar {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1) translateY(0);
+}
+
+.simple-mode .trending-box {
+    background: var(--simple-card);
+    border: 4px solid var(--simple-accent);
+    border-radius: 35px;
+    padding: 30px;
+}
+
+.simple-mode .trend {
+    font-size: 20px;
+    padding: 18px;
+    background: var(--simple-hover);
+    border-radius: 18px;
+    margin-bottom: 12px;
+    border: none;
+    color: var(--simple-accent);
+}
+
+</style>
+</head>
+<body class="dark-theme">
+
+<div class="hidden-toggle" onclick="toggleSimple()" title="Switch UI Style">Toggle Design Mode</div>
+
+<div class="container">
+
+    <div class="left-sidebar">
+        <h1 id="brand-logo">X</h1>
+        <div class="nav-btn">🏠 Home</div>
+        <div class="nav-btn">🔍 Explore</div>
+        <div class="nav-btn">🔔 Notifications</div>
+        <div class="nav-btn">👤 Profile</div>
+        
+        <!-- Theme Widget Exclusively for Simple Mode -->
+        <div class="simple-only display-settings" style="width: 100%;">
+            <p style="font-weight: bold; opacity: 0.6; padding-left: 10px; font-size: 14px;">DISPLAY SETTINGS</p>
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+                <span id="theme-text">Dark Mode</span>
+            </div>
+        </div>
+
+        <div class="tweet-btn">Post</div>
+    </div>
+
+    <div class="feed">
+        <div class="feed-header">
+            <span class="simple-only icon-btn" onclick="toggleSidebar()">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </span>
+            
+            <span class="header-title">Home</span>
+            
+            <span class="simple-only icon-btn" onclick="toggleTrending()">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            </span>
+        </div>
+        <div id="tweets"></div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="trending-box">
+            <h3 style="margin-bottom: 10px;">Trends</h3>
+            <div class="trend">#CatsOfTheWorld</div>
+            <div class="trend">#DogLovers</div>
+            <div class="trend">#Wildlife</div>
+            <div class="trend">#AnimalPhotography</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const tweetData = [
+    {
+        name: "CatDaily",
+        avatar: "https://placekittens.com/200/300",
+        text: "This cat refuses to wake up before 10am 🐱"
+    },
+    {
+        name: "DogVibes",
+        avatar: "https://placedog.net/100/100",
+        text: "Golden retriever discovers snow for the first time ❄️🐶"
+    },
+    {
+        name: "WildShots",
+        avatar: "https://placebear.com/100/100",
+        text: "A bear spotted peacefully walking through the forest 🌲"
+    },
+    {
+        name: "DevLife",
+        avatar: "https://ui-avatars.com/api/?name=Dev+Life&background=0D8ABC&color=fff",
+        text: "Just spent 3 hours debugging a missing semicolon. Standard Tuesday. 💻"
+    }
+];
+
+const container = document.getElementById("tweets");
+
+function render() {
+    container.innerHTML = '';
+    tweetData.forEach(t => {
+        const div = document.createElement("div");
+        div.classList.add("tweet");
+        div.innerHTML = `
+            <img src="${t.avatar}" class="avatar" alt="avatar">
+            <div class="tweet-content">
+                <div class="username">${t.name}</div>
+                <div class="tweet-text">${t.text}</div>
+                <div class="actions">
+                    <span data-label="Chat">💬</span>
+                    <span data-label="Echo">🔁</span>
+                    <span data-label="Love">❤️</span>
+                    <span data-label="Send">📤</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+render();
+
+function toggleSimple(){
+    const isSimple = document.body.classList.toggle("simple-mode");
+    const logo = document.getElementById("brand-logo");
+    
+    if(isSimple) {
+        logo.innerText = "X";
+        logo.style.color = "#1d9bf0";
+    } else {
+        logo.innerText = "X";
+        logo.style.color = "#e7e9ea";
+        document.body.classList.remove("sidebar-open", "trending-open");
+    }
+}
+
+function toggleTheme() {
+    const isLight = document.body.classList.toggle("light-theme");
+    document.getElementById("theme-icon").innerText = isLight ? "☀️" : "🌙";
+    document.getElementById("theme-text").innerText = isLight ? "Light Mode" : "Dark Mode";
+}
+
+function toggleSidebar(){
+    document.body.classList.toggle("sidebar-open");
+    document.body.classList.remove("trending-open");
+}
+
+function toggleTrending(){
+    document.body.classList.toggle("trending-open");
+    document.body.classList.remove("sidebar-open");
+}
+
+</script>
+
+</body>
+</html>
