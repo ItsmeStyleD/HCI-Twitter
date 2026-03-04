@@ -591,8 +591,11 @@ body {
     }
 
     .hidden-toggle {
+        display: block;
         bottom: 15px;
         right: 15px;
+        font-size: 9px;
+        padding: 4px 8px;
     }
 }
 
@@ -865,6 +868,10 @@ body {
             <span>👤</span>
             <span class="label">Profile</span>
         </div>
+        <div class="mobile-nav-btn mobile-design-toggle" aria-label="Toggle design mode" onclick="toggleSimple()">
+            <span id="mobile-toggle-icon" style="font-size:16px; opacity:0.4;">✦</span>
+            <span class="label" style="opacity:0.4;" id="mobile-toggle-label">Style</span>
+        </div>
     </div>
 </nav>
 
@@ -946,6 +953,11 @@ function toggleSimple() {
     if (!isSimple) {
         document.body.classList.remove("sidebar-open", "trending-open");
     }
+    // Update mobile toggle indicator
+    const mIcon = document.getElementById("mobile-toggle-icon");
+    const mLabel = document.getElementById("mobile-toggle-label");
+    if (mIcon) mIcon.style.opacity = isSimple ? "1" : "0.4";
+    if (mLabel) mLabel.style.opacity = isSimple ? "1" : "0.4";
 }
 
 function toggleTheme() {
